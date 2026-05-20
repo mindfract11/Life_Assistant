@@ -21,46 +21,46 @@ async def send_daily_forecast():
             if w_data:
                 advice = await get_ai_recommendation(w_data['temp'], w_data['desc'], w_data['humidity'])
                 text = (
-                    f"☀️ <b>Доброе утро!</b>\n"
-                    f"Твой прогноз для г. {city.capitalize()}:\n\n"
+                    f" <b>Good morning!!</b>\n"
+                    f"Your forecast for the city. {city.capitalize()}:\n\n"
                     f"{advice}"
                 )
                 await bot.send_message(user_id, text, parse_mode="HTML")
                 await asyncio.sleep(0.05)
         except Exception as e:
-            print(f"Ошибка рассылки {user_id}: {e}")
+            print(f"Mailing error {user_id}: {e}")
 
 
 
 @dp.message(Command("start"))
 async def start_cmd(message: types.Message):
     builder = ReplyKeyboardBuilder()
-    builder.row(types.KeyboardButton(text="🌡 Узнать погоду"))
-    builder.row(types.KeyboardButton(text="⚙️ Настройки"), types.KeyboardButton(text="ℹ️ Помощь"))
+    builder.row(types.KeyboardButton(text=" Check the weather"))
+    builder.row(types.KeyboardButton(text=" Setting"), types.KeyboardButton(text=" Help"))
 
     await message.answer(
-        "Привет! Я твой <b>Life Assistant</b>. 🤖\nНажми на кнопку или напиши город.",
+        "Hello! I your <b>Life Assistant</b>. \nClick the button or write the city.",
         reply_markup=builder.as_markup(resize_keyboard=True),
         parse_mode="HTML"
     )
 
 
-@dp.message(lambda message: message.text == "🌡 Узнать погоду")
+@dp.message(lambda message: message.text == "Check the weather ")
 async def ask_city(message: types.Message):
-    await message.answer("Введи название города:")
+    await message.answer("Enter the city name:")
 
 
 @dp.message()
 async def weather_logic(message: types.Message):
     city = message.text.replace('/weather', '').strip()
 
-    if city in ["⚙️ Настройки", "ℹ️ Помощь", ""]:
-        await message.answer("Этот раздел в разработке.")
+    if city in ["Setting", " Help", ""]:
+        await message.answer("This section is under development.")
         return
 
     w_data = await get_weather(city)
     if not w_data:
-        await message.answer(f"Город '{city}' не найден. Попробуй еще раз.")
+        await message.answer(f"City'{city}' not found. Try again.")
         return
 
 
@@ -69,10 +69,10 @@ async def weather_logic(message: types.Message):
     advice = await get_ai_recommendation(w_data['temp'], w_data['desc'], w_data['humidity'])
 
     await message.answer(
-        f"📍 <b>{city.capitalize()}</b>\n"
-        f"🌡 {w_data['temp']}°C, {w_data['desc']}\n"
-        f"💧 Влажность: {w_data['humidity']}%\n\n"
-        f"🤖 <b>Совет:</b>\n{advice}",
+        f"<b>{city.capitalize()}</b>\n"
+        f"{w_data['temp']}°C, {w_data['desc']}\n"
+        f"Humidity: {w_data['humidity']}%\n\n"
+        f"<b>Advice:</b>\n{advice}",
         parse_mode="HTML"
     )
 
@@ -84,7 +84,7 @@ async def main():
     scheduler.add_job(send_daily_forecast, "cron", hour=10, minute=00)
     scheduler.start()
 
-    print("Бот и планировщик запущены!")
+    print("The bot and scheduler are launched!")
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
