@@ -22,7 +22,6 @@ async def get_weather(city: str):
 
                     current = data['current_condition'][0]
 
-                    # Данные от сервера для проверки
                     area_data = data['nearest_area'][0]
                     server_city = area_data['areaName'][0]['value'].lower()
                     region = area_data['region'][0]['value'].lower()
