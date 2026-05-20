@@ -42,12 +42,13 @@ async def get_weather(city: str):
                             "humidity": current['humidity']
                         }
                     else:
-                        print(f"DEBUG: Несоответствие. Введено: {city_cleaned}, Найдено: {server_city} ({region})")
+                        print(f"DEBUG: Inconsistency. Entered:{city_cleaned}, 
+                        Found: {server_city} ({region})")
                         return None
 
                 except Exception as parse_err:
-                    print(f"DEBUG: Ошибка парсинга: {parse_err}")
+                    print(f"DEBUG:Parsing error: {parse_err}")
                     return None
         except Exception as e:
-            print(f"DEBUG: Ошибка сети: {e}")
+            print(f"DEBUG: Network Error: {e}")
             return None
