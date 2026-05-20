@@ -13,7 +13,6 @@ bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 
-# Фоновая задача рассылки
 async def send_daily_forecast():
     users = await get_all_users()
     for user_id, city in users:
@@ -32,7 +31,7 @@ async def send_daily_forecast():
             print(f"Ошибка рассылки {user_id}: {e}")
 
 
-# Обработчики
+
 @dp.message(Command("start"))
 async def start_cmd(message: types.Message):
     builder = ReplyKeyboardBuilder()
@@ -64,7 +63,7 @@ async def weather_logic(message: types.Message):
         await message.answer(f"Город '{city}' не найден. Попробуй еще раз.")
         return
 
-    # Сохраняем в БД
+
     await set_user_city(message.from_user.id, city)
 
     advice = await get_ai_recommendation(w_data['temp'], w_data['desc'], w_data['humidity'])
@@ -82,7 +81,6 @@ async def main():
     await init_db()
 
     scheduler = AsyncIOScheduler()
-    # Ставь нужное время тут
     scheduler.add_job(send_daily_forecast, "cron", hour=10, minute=00)
     scheduler.start()
 
