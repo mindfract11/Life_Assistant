@@ -9,4 +9,4 @@ DB_NAME = "data/life_assistant.db"
 
 
 if not BOT_TOKEN:
-    exit("Ошибка: Токен бота не найден. Проверь .env файл!")
+    exit("Error: Bot token not found. Check your .env file!")
